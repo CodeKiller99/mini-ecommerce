@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function Checkout() {
     const { cart, total } = useCart();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const [form, setForm] = useState({
         name: "",
@@ -22,20 +23,23 @@ function Checkout() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const { clearCart } = useCart();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // VALIDACIÓN SIMPLE
         if (!form.name || !form.email || !form.address) {
             setError("Todos los campos son obligatorios");
             return;
         }
 
-        // SIMULAR COMPRA
-        alert("Compra realizada con éxito 🎉");
+        setLoading(true);
 
-        // REDIRECCIONAR
-        navigate("/");
+        // simular petición
+        setTimeout(() => {
+            clearCart();
+            navigate("/success");
+        }, 2000);
     };
 
     return (
@@ -80,11 +84,30 @@ function Checkout() {
                             className="border p-2 rounded"
                         />
 
+                        <input
+                            type="text"
+                            placeholder="Número de tarjeta"
+                            className="border p-2 rounded"
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="MM/YY"
+                            className="border p-2 rounded"
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="CVV"
+                            className="border p-2 rounded"
+                        />
+
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white py-2 rounded"
+                            className="bg-blue-600 text-white py-2 rounded flex justify-center items-center"
+                            disabled={loading}
                         >
-                            Finalizar compra
+                            {loading ? "Procesando..." : "Finalizar compra"}
                         </button>
                     </form>
                 </div>
